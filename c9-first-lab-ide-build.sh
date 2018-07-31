@@ -89,5 +89,17 @@ if [ ! -d "aws-workshop-for-kubernetes/" ]; then
 fi
 
 
+
+########################################################################
+# git clone repo
+mkdir /home/ec2-user/environment/git
+
+cd /home/ec2-user/environment/git
+git clone https://github.com/kubernetes-incubator/metrics-server.git
+git clone https://github.com/raydigitallife/aws-kops.git
+
+
 # update all
 sudo yum update -y
+
+

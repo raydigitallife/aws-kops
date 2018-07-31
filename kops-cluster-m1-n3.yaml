@@ -65,7 +65,7 @@ metadata:
 spec:
   image: kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
   machineType: t2.medium
-  maxPrice: 0.5
+  maxPrice: "0.5"
   maxSize: 1
   minSize: 1
   nodeLabels:
@@ -85,8 +85,8 @@ metadata:
   name: nodes
 spec:
   image: kope.io/k8s-1.9-debian-jessie-amd64-hvm-ebs-2018-03-11
-  machineType: t2.small
-  maxPrice: 0.5
+  machineType: t2.medium
+  maxPrice: "0.5"
   maxSize: 3
   minSize: 3
   nodeLabels:
