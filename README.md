@@ -38,3 +38,22 @@
 -   `kubectl apply -f metrics-server/deploy/1.8+/`
 -   同樣的方式部署在EKS叢集就會有錯，但KOPS自建的叢集卻沒有問題??  
 -   可能跟EKS master 有限制部份功能的關係??
+
+
+### 簡單的壓力測試，前提是metrics-server能正確的取得cpu度量，否則autoscale不會有動作
+kubect scale deploy 目標 --re
+
+
+
+
+
+### 对tomcat service进行压力测试
+
+kubectl run -i --tty load-generator --image=busybox /bin/sh
+
+If you don't see a command prompt, try pressing enter.
+/ # while true; do wget -q -O- http://tomcat.default.svc.cluster.local:8080 > /dev/null; done
+
+while true ; do wget -q -O- http://100.67.162.142 > /dev/null ; done
+
+https://blog.frognew.com/2017/01/kubernetes-pod-scale.html
