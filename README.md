@@ -38,12 +38,27 @@
 -   `kubectl apply -f metrics-server/deploy/1.8+/`
 -   同樣的方式部署在EKS叢集就會有錯，但KOPS自建的叢集卻沒有問題??  
 -   可能跟EKS master 有限制部份功能的關係??
+-   確認是AWS的EKS issue，要一段時間後才會修復  
+
+### kops update cluster version
+-   預設kops產生的 cluster 為V1.9.6版的，可到  
+    `https://github.com/kubernetes/kubernetes/releases`  
+    取得最新版本  
+-   部署後升級cluster版本  
+    `kops replace -f 新版的部署文件`  
+    `kops update cluster --yes`  
+    `kops rolling-update cluster --yes`  
+    如果沒有加 `--yes` 會再提示，並有動作清單參考  
+-   更新過程可能會蠻久的  
 
 
-### 簡單的壓力測試，前提是metrics-server能正確的取得cpu度量，否則autoscale不會有動作
-kubect scale deploy 目標 --re
 
 
+
+
+### 壓力測試
+-   前提是metrics-server能正確的取得cpu度量，否則autoscale不會有動作
+-   kubect scale deploy 目標 --re
 
 
 
