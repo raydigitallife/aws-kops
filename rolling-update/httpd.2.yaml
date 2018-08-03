@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: httpd
+  name: httpd
+spec:
+  replicas: 60
+  selector:
+    matchLabels:
+      run: httpd
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: httpd
+    spec:
+      containers:
+      - image: httpd:2
+        name: httpd
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}

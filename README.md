@@ -26,10 +26,7 @@
     會先列出即將刪除的資源清單給你確認  
     2. 刪除一樣等他跑完就刪除了，沒什麼難度  
 
-
-
 ### kubectl
-
 - kops會自動將設定檔帶到執行環境，一般來說不用特別設定等kops正常跑完即可  
 - `kubectl get nodes` 如果都有取得資訊就沒問題了  
 
@@ -49,14 +46,13 @@
     `kops update cluster --yes`  
     `kops rolling-update cluster --yes`  
     如果沒有加 `--yes` 會再提示，並有動作清單參考  
--   更新過程可能會蠻久的  
+-   更新過程可能會很久，不需要特別測試反正等他跑完就換成新版本了
+-   結果 1M 3N 的規模跑完大概是半個多小時
+-   開始建叢集時指定好新版本即可
 
 
 
-
-
-
-### 壓力測試
+### 壓力測試 (未完成)
 -   前提是metrics-server能正確的取得cpu度量，否則autoscale不會有動作
 -   kubect scale deploy 目標 --re
 
