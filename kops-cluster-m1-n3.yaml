@@ -11,7 +11,7 @@ spec:
     rbac: {}
   channel: stable
   cloudProvider: aws
-  configBase: s3://kops-cli-test-ray-20180723/c9.k8s.local
+  configBase: s3://kops-c9-ray-test/c9.k8s.local
   etcdClusters:
   - etcdMembers:
     - instanceGroup: master-us-west-2a

@@ -1,12 +1,12 @@
 # IDE-Build script
-#title           lab-ide-build.sh
-#description     This script will setup the Cloud9 IDE with the prerequisite packages and code for the workshop.
-#author          @buzzsurfr
-#contributors    @buzzsurfr @dalbhanj @cloudymind
-#date            2018-05-12
-#version         0.2
-#usage           curl -sSL https://s3.amazonaws.com/lab-ide-theomazonian/lab-ide-build.sh | bash -s stable
-#==============================================================================
+# title           lab-ide-build.sh
+# description     This script will setup the Cloud9 IDE with the prerequisite packages and code for the workshop.
+# author          @buzzsurfr
+# contributors    @buzzsurfr @dalbhanj @cloudymind
+# editor          @ckmates.com
+# modify-date     2018-08-28
+# version         0.4
+# ==============================================================================
 
 # Install jq
 sudo yum -y install jq
@@ -17,23 +17,24 @@ sudo -H pip install -U awscli
 # Install bash-completion
 sudo yum install bash-completion -y
 
+# ==============================================================================
 # Install kubectl
-curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/bin/linux/amd64/kubectl
+curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/kubectl
 chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
-
+# ==============================================================================
 # Install Heptio Authenticator
-curl -o heptio-authenticator-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-06-05/bin/linux/amd64/heptio-authenticator-aws
+curl -o heptio-authenticator-aws https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
 chmod +x ./heptio-authenticator-aws && sudo mv heptio-authenticator-aws /usr/local/bin/
 
+# ==============================================================================
 # Install kops
 curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
-chmod +x kops-linux-amd64
-sudo mv kops-linux-amd64 /usr/local/bin/kops
+chmod +x kops-linux-amd64 && sudo mv kops-linux-amd64 /usr/local/bin/kops
 
 echo "source <(kops completion bash)" >> ~/.bashrc
-
+# ==============================================================================
 # Configure AWS CLI
 availability_zone=$(curl http://169.254.169.254/latest/meta-data/placement/availability-zone)
 export AWS_DEFAULT_REGION=${availability_zone%?}
@@ -70,9 +71,9 @@ echo "EKS_SERVICE_ROLE=$EKS_SERVICE_ROLE" >> ~/.bashrc
 
 # EKS-Optimized AMI
 if [ "$AWS_DEFAULT_REGION" == "us-east-1" ]; then
-  export EKS_WORKER_AMI=ami-dea4d5a1
+  export EKS_WORKER_AMI=ami-048486555686d18a0
 elif [ "$AWS_DEFAULT_REGION" == "us-west-2" ]; then
-  export EKS_WORKER_AMI=ami-73a6e20b
+  export EKS_WORKER_AMI=ami-02415125ccd555295
 fi
 echo "EKS_WORKER_AMI=$EKS_WORKER_AMI" >> ~/.bashrc
 
@@ -83,23 +84,29 @@ ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 aws ec2 create-key-pair --key-name ${AWS_STACK_NAME} --query 'KeyMaterial' --output text > $HOME/.ssh/k8s-workshop.pem
 chmod 0400 $HOME/.ssh/k8s-workshop.pem
 
-if [ ! -d "aws-workshop-for-kubernetes/" ]; then
-  # Download lab Repository
-  git clone https://github.com/aws-samples/aws-workshop-for-kubernetes
-fi
 
+# ==============================================================================
+# aws-workshop-for-kubernetes Git Repository
 
+# if [ ! -d "aws-workshop-for-kubernetes/" ]; then
+#   # Download lab Repository
+#   git clone https://github.com/aws-samples/aws-workshop-for-kubernetes
+# fi
 
-########################################################################
-# git clone repo
-mkdir /home/ec2-user/environment/git
+# ==============================================================================
 
-cd /home/ec2-user/environment/git
-git clone https://github.com/kubernetes-incubator/metrics-server.git
-git clone https://github.com/raydigitallife/aws-kops.git
-git clone https://github.com/raydigitallife/shell.git
+# add ~/.kube folder and kubeconfig
+
+mkdir /home/ec2-user/.kube
+cp /home/ec2-user/environment/k8s-workshop/1.kubectl-setting/kubeconfig.yaml /home/ec2-user/.kube/config
+cp /home/ec2-user/environment/k8s-workshop/1.kubectl-setting/aws-auth-cm.yaml /home/ec2-user/.kube/aws-auth-cm.yaml
 
 # update all
 sudo yum update -y
 
+# update awscli
+pip install awscli --upgrade --user
+
+clear && \
+echo "請登出Cloud9的終端介面 (CTRL+D), 再新增新的終端 (ALT+T), 讓設定值生效"
 
